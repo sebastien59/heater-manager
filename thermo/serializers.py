@@ -26,14 +26,20 @@ class RoomsSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'name')
 
 class PlugsSerializer(serializers.HyperlinkedModelSerializer):
-    room = RoomsSerializer(required=False)
-
+    #room = RoomsSerializer(required=False)
+    room = serializers.HyperlinkedRelatedField(
+        queryset=Rooms.objects.all(),
+        view_name='room-detail'
+    )
     class Meta:
         model = Plugs
         fields = ('name', 'ip', 'state', 'room', 'force')
 
 class SensorsSerializer(serializers.HyperlinkedModelSerializer):
-    room = RoomsSerializer()
+    room = serializers.HyperlinkedRelatedField(
+        queryset=Rooms.objects.all(),
+        view_name='room-detail'
+    )
     class Meta:
         model = Sensors
         fields = ('name', 'ip', 'room')

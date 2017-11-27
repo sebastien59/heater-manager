@@ -1,3 +1,6 @@
 ./.idea/*
 ./._.DS_Store
 ./nohup.out
+\.idea/
+
+*.pyc

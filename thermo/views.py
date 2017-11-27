@@ -46,9 +46,20 @@ class SetupView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-class SetupDetailView(generics.RetrieveUpdateDestroyAPIView):
-        queryset = Setup.objects.all()
-        serializer_class = SetupSerializer
+class SetupDetailView(viewsets.ModelViewSet):
+    queryset = Setup.objects.all()
+    serializer_class = SetupSerializer
+    lookup_field="name"
+
+    @detail_route(methods=['put'])
+    def update(self, request, name=None):
+        setup = self.get_object()
+        serializer = SetupSerializer(setup, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': 'setup set'})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RoomsView(generics.ListCreateAPIView):
     """
