@@ -237,7 +237,7 @@ class CheckDataView(APIView):
                 elif (plug.force == 1):
                     BoolPlugForced = False
 
-            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and (date.today().isoweekday() != 6 and date.today().isoweekday() != 7)
+            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and ((date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent('iPhone-de-sebastien.local'))
 
             if BoolPlugForced or condition:
                 askedTemperature = Setup.objects.get(name__iexact="Temperature")

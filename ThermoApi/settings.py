@@ -95,7 +95,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'thermo',
         'USER': 'root',
-        'PASSWORD': 'w/BuV#Ee',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '',
     }
