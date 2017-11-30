@@ -1,2 +1,8 @@
 django-getenv
-dotenv
+django-dotenv
+django
+djangorestframework
+django-cors-headers
+mysqlclient
+requests
+pyHS100

@@ -18,9 +18,9 @@ def isPresent(deviceName):
             stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p_status = p.wait()
-
+        output = str(output)
         output = output.replace("\n", "")
-        if output:
+        if t:
             return True
         else:
             return err
