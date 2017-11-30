@@ -20,7 +20,7 @@ def isPresent(deviceName):
         p_status = p.wait()
         output = str(output)
         output = output.replace("\n", "")
-        if t:
+        if output:
             return True
         else:
             return err
