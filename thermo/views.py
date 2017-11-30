@@ -21,8 +21,6 @@ from thermo.helpers.helpers import *
 from thermo.serializers import *
 from thermo.models import *
 
-
-
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -249,7 +247,7 @@ class CheckDataView(APIView):
                 elif (plug.force == 1):
                     BoolPlugForced = False
 
-            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and ((date.today().isoweekday() != 6 and date.today().isoweekday() != 7)) or isPresent('iPhone-de-sebastien.local')
+            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and ((date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent('iPhone-de-sebastien.local'))
 
             if BoolPlugForced or condition:
                 askedTemperature = Setup.objects.get(name__iexact="Temperature")
