@@ -79,8 +79,8 @@ class RoomsView(generics.ListCreateAPIView):
 
             sensor_o = Sensors.objects.all().filter(room_id=room.id)
             for sensor in sensor_o:
-                #data = requests.get('http://' + sensor.ip + '/data').json()
-                data = {"Temperature": "21", "Humidity": "56"}
+                data = requests.get('http://' + sensor.ip + '/data').json()
+                #data = {"Temperature": "21", "Humidity": "56"}
                 sensors.append({'id': sensor.id, 'name': sensor.name, 'ip': sensor.ip ,'temperature': data['Temperature'], 'humidity': data['Humidity']})
             rooms.append({'id': room.id, 'name': room.name, 'plugs': plugs, 'sensors':sensors})
         return Response(rooms)
@@ -146,8 +146,8 @@ class SensorsView(generics.ListCreateAPIView):
     def list(request, *args, **kwargs):
         sensors = []
         for sensor in Sensors.objects.all():
-            #data = requests.get('http://' + sensor.ip + '/data').json()
-            data = {"Temperature": "21", "Humidity": "56"}
+            data = requests.get('http://' + sensor.ip + '/data').json()
+            #data = {"Temperature": "21", "Humidity": "56"}
             sensors.append({'id':sensor.id, 'name': sensor.name, 'temperature':data['Temperature'], 'humidity':data['Humidity']})
         return Response(sensors)
 
