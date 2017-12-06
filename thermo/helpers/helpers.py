@@ -20,7 +20,8 @@ def isPresent(deviceName):
         p_status = p.wait()
         output = str(output)
         output = output.replace("\n", "")
-        if output:
+
+        if len(output)>3:
             return True
         else:
-            return err
+            return False

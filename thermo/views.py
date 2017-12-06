@@ -79,8 +79,8 @@ class RoomsView(generics.ListCreateAPIView):
 
             sensor_o = Sensors.objects.all().filter(room_id=room.id)
             for sensor in sensor_o:
-                data = requests.get('http://' + sensor.ip + '/data').json()
-                #data = {"Temperature": "21", "Humidity": "56"}
+                #data = requests.get('http://' + sensor.ip + '/data').json()
+                data = {"Temperature": "21", "Humidity": "56"}
                 sensors.append({'id': sensor.id, 'name': sensor.name, 'ip': sensor.ip ,'temperature': data['Temperature'], 'humidity': data['Humidity']})
             rooms.append({'id': room.id, 'name': room.name, 'plugs': plugs, 'sensors':sensors})
         return Response(rooms)
@@ -146,8 +146,8 @@ class SensorsView(generics.ListCreateAPIView):
     def list(request, *args, **kwargs):
         sensors = []
         for sensor in Sensors.objects.all():
-            data = requests.get('http://' + sensor.ip + '/data').json()
-            #data = {"Temperature": "21", "Humidity": "56"}
+            #data = requests.get('http://' + sensor.ip + '/data').json()
+            data = {"Temperature": "21", "Humidity": "56"}
             sensors.append({'id':sensor.id, 'name': sensor.name, 'temperature':data['Temperature'], 'humidity':data['Humidity']})
         return Response(sensors)
 
@@ -247,12 +247,20 @@ class CheckDataView(APIView):
                 elif (plug.force == 1):
                     BoolPlugForced = False
 
-            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and ((date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent('iPhone-de-sebastien.local'))
+            #condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and (
+            #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
+            #    'iPhone-de-sebastien.local'))
+
+            condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and isPresent(
+                'iPhone-de-sebastien.local')) or (not isPresent('iPhone-de-sebastien.local') and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
             if BoolPlugForced or condition:
-                askedTemperature = Setup.objects.get(name__iexact="Temperature")
+                if isPresent('iPhone-de-sebastien.local'):
+                    askedTemperature = Setup.objects.get(name__iexact="Temperature").value
+                else:
+                    askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
 
-                if BoolPlugForced or int(sensors[sensor.name]['Temperature']) < int(askedTemperature.value) + 1:
+                if BoolPlugForced or int(sensors[sensor.name]['Temperature']) < int(askedTemperature) + 1:
                     response['success'] = True
                     response['sensors'][sensor.name] = {'state': "on"}
                     logsPlugs.value = 1
@@ -262,7 +270,7 @@ class CheckDataView(APIView):
                             plug.state = True
                             smplug = SmartPlug(plug.ip)
                             smplug.turn_on()
-                elif BoolPlugForced == False or int(sensors[sensor.name]['Temperature']) >= int(askedTemperature.value) - 1:
+                elif BoolPlugForced == False or int(sensors[sensor.name]['Temperature']) >= int(askedTemperature) - 1:
                     response['success'] = True
                     response['sensors'][sensor.name] = {'state': "off"}
                     logsPlugs.value = 0
@@ -279,6 +287,8 @@ class CheckDataView(APIView):
                     smplug = SmartPlug(plug.ip)
                     plug.state = False
                     smplug.turn_off()
+
+
             logsPlugs.save()
             plug.save()
         return JsonResponse(response)
