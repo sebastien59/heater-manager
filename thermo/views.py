@@ -253,10 +253,10 @@ class CheckDataView(APIView):
 
             condition = isSetupTrue("ForceOn") or (
                     isSetupTrue("ForceStop") != True and isPresent('iPhone-de-sebastien.local')) or (
-                    (not isPresent('iPhone-de-sebastien.local') or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
+                    ((not isPresent('iPhone-de-sebastien.local')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
             if BoolPlugForced or condition:
-                if isPresent('iPhone-de-sebastien.local'):
+                if isPresent('iPhone-de-sebastien.local') and (BoolInterval == False):
                     askedTemperature = Setup.objects.get(name__iexact="Temperature").value
                 else:
                     askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
