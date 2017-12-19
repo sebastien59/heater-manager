@@ -14,7 +14,7 @@ def isInTimeInterval(datetime1= None, datetime2=None):
 
 def isPresent(deviceName):
         p = subprocess.Popen(
-            "ping -c1 -W1  "+deviceName+" | grep -o -E '[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}'",
+            "ping -c1 -W1  "+deviceName+" | grep -o -E '[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}'",
             stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p_status = p.wait()

@@ -202,7 +202,7 @@ class CheckPresenceView(APIView):
             'auth': unicode(request.auth),  # None
         }
         p = subprocess.Popen(
-            "ping -c1 -W1  iPhone-de-sebastien.local | grep -o -E '[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}'",
+            "ping -c1 -W1  iphone-de-sebastien.home | grep -o -E '[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}'",
             stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p_status = p.wait()
@@ -249,14 +249,14 @@ class CheckDataView(APIView):
 
             #condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and (
             #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
-            #    'iPhone-de-sebastien.local'))
+            #    'iphone-de-sebastien.home'))
 
             condition = isSetupTrue("ForceOn") or (
-                    isSetupTrue("ForceStop") != True and isPresent('iPhone-de-sebastien.local')) or (
-                    ((not isPresent('iPhone-de-sebastien.local')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
+                    isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home')) or (
+                    ((not isPresent('iphone-de-sebastien.home')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
             if BoolPlugForced or condition:
-                if isPresent('iPhone-de-sebastien.local') and (BoolInterval == False):
+                if isPresent('iphone-de-sebastien.home') and (BoolInterval == False):
                     askedTemperature = Setup.objects.get(name__iexact="Temperature").value
                 else:
                     askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
