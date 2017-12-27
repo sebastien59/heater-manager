@@ -237,41 +237,49 @@ class CheckDataView(APIView):
             BoolInterval = False
 
             for ti in TimeInterval.objects.all().filter(room_id=sensor.room.id):
-                if(isInTimeInterval(ti.startingTime, ti.endingTime)):
+                #print("isInTimeInterval ::: "+str(isInTimeInterval(ti.startingTime, ti.endingTime)))
+                if isInTimeInterval(ti.startingTime, ti.endingTime):
                     BoolInterval = True
 
-            BoolPlugForced = None
-            for plug in plugs:
-                if (plug.force == 2):
-                    BoolPlugForced = True
-                elif (plug.force == 1):
-                    BoolPlugForced = False
+            print("BoolInterval : "+str(BoolInterval))
+            #BoolPlugForced = None
+            #for plug in plugs:
+            #    if (plug.force == 2):
+            #        BoolPlugForced = True
+            #    elif (plug.force == 1):
+            #        BoolPlugForced = False
 
             #condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and (
             #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
             #    'iphone-de-sebastien.home'))
 
-            condition = isSetupTrue("ForceOn") or (
-                    isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home')) or (
+            condition =  (isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home') and BoolInterval == False) or (
                     ((not isPresent('iphone-de-sebastien.home')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
-            if BoolPlugForced or condition:
+            print("condition1: " + str((isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home') and BoolInterval == False)))
+            print("__")
+            print("condition2 : " + str(((not isPresent('iphone-de-sebastien.home')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value)))
+
+
+            if  condition:
                 if isPresent('iphone-de-sebastien.home') and (BoolInterval == False):
                     askedTemperature = Setup.objects.get(name__iexact="Temperature").value
                 else:
                     askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
 
-                if BoolPlugForced or int(sensors[sensor.name]['Temperature']) < int(askedTemperature) + 1:
+                print(askedTemperature)
+                print(sensors[sensor.name]['Temperature'])
+                if  int(sensors[sensor.name]['Temperature']) < int(askedTemperature) + 1:
                     response['success'] = True
                     response['sensors'][sensor.name] = {'state': "on"}
                     logsPlugs.value = 1
                     for plug in plugs:
-                        if(condition == True or BoolPlugForced):
+                        if(condition == True):
                             print("ON " + plug.ip)
                             plug.state = True
                             smplug = SmartPlug(plug.ip)
                             smplug.turn_on()
-                elif BoolPlugForced == False or int(sensors[sensor.name]['Temperature']) >= int(askedTemperature) - 1:
+                elif int(sensors[sensor.name]['Temperature']) >= int(askedTemperature) - 1:
                     response['success'] = True
                     response['sensors'][sensor.name] = {'state': "off"}
                     logsPlugs.value = 0
