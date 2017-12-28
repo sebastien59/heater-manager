@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User, Group
 from django.http import JsonResponse
+from getenv import env
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -79,8 +80,11 @@ class RoomsView(generics.ListCreateAPIView):
 
             sensor_o = Sensors.objects.all().filter(room_id=room.id)
             for sensor in sensor_o:
-                data = requests.get('http://' + sensor.ip + '/data').json()
-                #data = {"Temperature": "21", "Humidity": "56"}
+                if env("DEBUG") == True:
+                    data = {"Temperature": "21", "Humidity": "56"}
+                else:
+                    data = requests.get('http://' + sensor.ip + '/data').json()
+
                 sensors.append({'id': sensor.id, 'name': sensor.name, 'ip': sensor.ip ,'temperature': data['Temperature'], 'humidity': data['Humidity']})
             rooms.append({'id': room.id, 'name': room.name, 'plugs': plugs, 'sensors':sensors})
         return Response(rooms)
@@ -113,11 +117,9 @@ class PlugsDetailView(viewsets.ModelViewSet):
     @detail_route(methods=['put'])
     def update(self, request, pk=None):
         plug = self.get_object()
-        #print(request.data)
+
         serializer = PlugsSerializer(plug, data=request.data, partial=True)
         if serializer.is_valid():
-            print(request.data['state'])
-
             try:
                 smplug = SmartPlug(request.data['ip'])
                 if(request.data['state'] == '1' or request.data['state'] == True):
@@ -146,8 +148,11 @@ class SensorsView(generics.ListCreateAPIView):
     def list(request, *args, **kwargs):
         sensors = []
         for sensor in Sensors.objects.all():
-            data = requests.get('http://' + sensor.ip + '/data').json()
-            #data = {"Temperature": "21", "Humidity": "56"}
+            if env("DEBUG") == True:
+                data = {"Temperature": "21", "Humidity": "56"}
+            else:
+                data = requests.get('http://' + sensor.ip + '/data').json()
+
             sensors.append({'id':sensor.id, 'name': sensor.name, 'temperature':data['Temperature'], 'humidity':data['Humidity']})
         return Response(sensors)
 
@@ -224,7 +229,11 @@ class CheckDataView(APIView):
         response = {}
         response['sensors'] = {}
         for sensor in Sensors.objects.all():
-            sensors[sensor.name] = requests.get('http://' + sensor.ip + '/data').json()
+            if env("DEBUG") == True:
+                sensors[sensor.name] = {"Temperature": "21", "Humidity": "56"}
+            else:
+                sensors[sensor.name] = requests.get('http://' + sensor.ip + '/data').json()
+
             logsSensors = LogsSensors()
             logsSensors.temperature = sensors[sensor.name].get('Temperature')
             logsSensors.humidity = sensors[sensor.name].get('Humidity')
@@ -237,8 +246,8 @@ class CheckDataView(APIView):
             BoolInterval = False
 
             for ti in TimeInterval.objects.all().filter(room_id=sensor.room.id):
-                #print("isInTimeInterval ::: "+str(isInTimeInterval(ti.startingTime, ti.endingTime)))
-                if isInTimeInterval(ti.startingTime, ti.endingTime):
+
+                if(isInTimeInterval(ti.startingTime, ti.endingTime)):
                     BoolInterval = True
 
             print("BoolInterval : "+str(BoolInterval))
