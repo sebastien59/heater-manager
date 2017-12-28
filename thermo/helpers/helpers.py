@@ -1,4 +1,4 @@
-from thermo.models import Setup, Plugs
+from thermo.models import Setup, Plugs, LogsPresence
 from datetime import datetime, time
 import subprocess
 
@@ -21,7 +21,11 @@ def isPresent(deviceName):
         output = str(output)
         output = output.replace("\n", "")
 
+        logPresence = LogsPresence()
         if len(output)>3:
+            logPresence.presence=1
+            logPresence.save()
             return True
         else:
+            logPresence.save()
             return False

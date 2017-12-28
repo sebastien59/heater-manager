@@ -262,16 +262,17 @@ class CheckDataView(APIView):
             #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
             #    'iphone-de-sebastien.home'))
 
-            condition =  (isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home') and BoolInterval == False) or (
-                    ((not isPresent('iphone-de-sebastien.home')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
+            presenceBool = isPresent('iphone-de-sebastien.home')
+            condition =  (isSetupTrue("ForceStop") != True and presenceBool and BoolInterval == False) or (
+                    ((not presenceBool) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
-            print("condition1: " + str((isSetupTrue("ForceStop") != True and isPresent('iphone-de-sebastien.home') and BoolInterval == False)))
+            print("condition1: " + str((isSetupTrue("ForceStop") != True and presenceBool and BoolInterval == False)))
             print("__")
-            print("condition2 : " + str(((not isPresent('iphone-de-sebastien.home')) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value)))
+            print("condition2 : " + str(((not presenceBool) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value)))
 
 
             if  condition:
-                if isPresent('iphone-de-sebastien.home') and (BoolInterval == False):
+                if presenceBool and (BoolInterval == False):
                     askedTemperature = Setup.objects.get(name__iexact="Temperature").value
                 else:
                     askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
