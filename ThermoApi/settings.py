@@ -26,7 +26,7 @@ SECRET_KEY = 'a2-5ym*p^bj8*l2r=0!(v)_0*wadwq95((b1#^j#obn$h!4(b+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', "127.0.0.1", "raspberrypi.local", 'merchez.ddns.net']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL=True
 CORS_ORIGIN_WHITELIST = ('localhost', '127.0.0.1', 'raspberrypi.local', 'localhost:8000', '127.0.0.1:8000', 'raspberrypi.local:8000', 'merchez.ddns.net:8000')
 
@@ -98,7 +98,7 @@ DATABASES = {
         'USER': env('DB_USER'),
         'PASSWORD': env("DB_PASSWORD"),
         'HOST': env("DB_HOST"),
-        'PORT': '',
+        'PORT': env("DB_PORT"),
     }
 }
 
