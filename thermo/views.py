@@ -262,7 +262,7 @@ class CheckDataView(APIView):
             #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
             #    'iphone-de-sebastien.local'))
 
-            presenceBool = sensors[sensor.name].get('Presence')
+            presenceBool = isPresent('iphone-de-sebastien.local')
             condition =  (isSetupTrue("ForceStop") != True and presenceBool and BoolInterval == False) or (
                     ((not presenceBool) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
