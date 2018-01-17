@@ -262,7 +262,8 @@ class CheckDataView(APIView):
             #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
             #    'iphone-de-sebastien.local'))
 
-            presenceBool = isPresent('iphone-de-sebastien.local')
+            presenceBool = True if sensors[sensor.name].get('Presence')=="1" else False #isPresent('iphone-de-sebastien.local')
+            print("Presence:"+str(presenceBool))
             condition =  (isSetupTrue("ForceStop") != True and presenceBool and BoolInterval == False) or (
                     ((not presenceBool) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
 
@@ -278,7 +279,7 @@ class CheckDataView(APIView):
                     askedTemperature = Setup.objects.get(name__iexact="MinTemperature").value
 
                 print(askedTemperature)
-                print(sensors[sensor.name]['Temperature'])
+                #print(sensors[sensor.name]['Temperature'])
                 if  int(sensors[sensor.name]['Temperature']) < int(askedTemperature) + 1:
                     response['success'] = True
                     response['sensors'][sensor.name] = {'state': "on"}
