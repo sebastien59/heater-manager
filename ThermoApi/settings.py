@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL=True
-CORS_ORIGIN_WHITELIST = ('localhost', '127.0.0.1', 'raspberrypi.local', 'localhost:8000', '127.0.0.1:8000', 'raspberrypi.local:8000', 'merchez.ddns.net:8000')
+CORS_ORIGIN_WHITELIST = ('localhost', '127.0.0.1', 'raspberrypi.local', 'localhost:8000', '127.0.0.1:8000', 'raspberrypi.local:8000', 'merchez.ddns.net:8000', '192.168.1.20:8000')
 
 # Application definition
 
