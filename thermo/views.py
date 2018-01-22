@@ -263,6 +263,12 @@ class CheckDataView(APIView):
             #    'iphone-de-sebastien.local'))
 
             presenceBool = True if sensors[sensor.name].get('Presence')=="1" else False #isPresent('iphone-de-sebastien.local')
+
+            logPresence = LogsPresence()
+            if presenceBool:
+                logPresence.presence = 1
+            logPresence.save()
+
             print("Presence:"+str(presenceBool))
             condition =  (isSetupTrue("ForceStop") != True and presenceBool and BoolInterval == False) or (
                     ((not presenceBool) or BoolInterval) and int(sensors[sensor.name]['Temperature']) < int(Setup.objects.get(name__iexact="MinTemperature").value))
