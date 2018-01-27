@@ -6,6 +6,6 @@ if __name__ == '__main__':
         p_status = p.wait()
         print(output)
         if output:
-            print "Yay, the devine is connected to your network!"
+            print("Yay, the devine is connected to your network!")
         else:
-            print "The device is not present!"
+            print("The device is not present!")
