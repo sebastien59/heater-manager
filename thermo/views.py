@@ -250,18 +250,6 @@ class CheckDataView(APIView):
                 if(isInTimeInterval(ti.startingTime, ti.endingTime)):
                     BoolInterval = True
 
-            print("BoolInterval : "+str(BoolInterval))
-            #BoolPlugForced = None
-            #for plug in plugs:
-            #    if (plug.force == 2):
-            #        BoolPlugForced = True
-            #    elif (plug.force == 1):
-            #        BoolPlugForced = False
-
-            #condition = isSetupTrue("ForceOn") or (isSetupTrue("ForceStop") != True and BoolInterval) and (
-            #(date.today().isoweekday() != 6 and date.today().isoweekday() != 7) or isPresent(
-            #    'iphone-de-sebastien.local'))
-
             presenceBool = True if sensors[sensor.name].get('Presence')=="1" else False #isPresent('iphone-de-sebastien.local')
 
             logPresence = LogsPresence()
