@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.6"
+services:
+  - mysql
 install:
   - pip install -r requirements.txt
   - echo "DB_NAME=thermo" > .env
@@ -8,4 +10,7 @@ install:
   - echo "DB_PASSWORD=root" >> .env
   - echo "DB_HOST=localhost" >> .env
   - echo "DEBUG=False" >> .env
+before_script:
+  - mysql -e 'create database thermo;' -u root
+  - python manage.py migrate
 script: python manage.py test
