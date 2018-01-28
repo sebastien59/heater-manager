@@ -3,4 +3,9 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+  - echo "DB_NAME=thermo" > .env
+  - echo "DB_USER=root" >> .env
+  - echo "DB_PASSWORD=root" >> .env
+  - echo "DB_HOST=localhost" >> .env
+  - echo "DEBUG=False" >> .env
 script: python manage.py test
