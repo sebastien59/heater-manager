@@ -14,3 +14,9 @@ before_script:
   - mysql -e 'create database thermo;' -u root
   - python manage.py migrate
 script: python manage.py test
+deploy:
+  # deploy develop to the staging environment
+  - provider: script
+    script: scripts/deploy.sh
+    on:
+      branch: master
