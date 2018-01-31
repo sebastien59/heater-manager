@@ -13,7 +13,7 @@ install:
 - echo "DB_HOST=localhost" >> .env
 - echo "DEBUG=False" >> .env
 before_script:
-- echo -e "Host $SERVER_NS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- echo -e "Host $SERVER_NSntStrictHostKeyChecking no\n" >> ~/.ssh/config
 - mysql -e 'create database thermo;' -u root
 - python manage.py migrate
 script: python manage.py test
