@@ -29,7 +29,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: scripts/deploy.sh
+    script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/<dir> $SSH_USER@$SERVER_NS:$SSH_PATH #scripts/deploy.sh
     on:
       branch: master
 
