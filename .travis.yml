@@ -22,10 +22,10 @@ before_script:
 script: python manage.py test
 
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_1d64c359ab37_key -iv $encrypted_1d64c359ab37_iv -in scripts/deploy_rsa.enc -out scripts/deploy_rsa -d
+  - openssl aes-256-cbc -K $encrypted_1d64c359ab37_key -iv $encrypted_1d64c359ab37_iv -in scripts/deploy_rsa.enc -out /tmp/deploy_rsa -d
   - eval "$(ssh-agent -s)"
-  - chmod 600 /scripts/deploy_rsa
-  - ssh-add /scripts/deploy_rsa
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
 
 deploy:
   - provider: script
