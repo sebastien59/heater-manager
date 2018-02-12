@@ -56,7 +56,7 @@ class SetupDetailView(viewsets.ModelViewSet):
         serializer = SetupSerializer(setup, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'status': 'setup set'})
+            return Response({'status': True, 'name':setup.name, 'value': setup.value})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
